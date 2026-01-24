@@ -22,7 +22,7 @@
             formControlName="username"
             type="text"
             placeholder="Username"
-            class="w-full outline-none text-base"
+            class="w-full outline-none text-base bg-gray-100"
           />
         </div>
 
@@ -32,15 +32,21 @@
             formControlName="password"
             type="password"
             placeholder="Password"
-            class="w-full outline-none text-base"
+            class="w-full outline-none text-base bg-gray-100"
           />
         </div>
 
+        <div>
+          <p class="text-red-600 text-sm mb-2">{{ errorMessage }}</p>
+        </div>
+
         <div
+          (click)="login()"
+          [class.disabled]="loginForm.invalid"
           class="w-[100px] bg-blue-600 text-white py-3 rounded self-end hover:bg-blue-800 transition-colors flex items-center justify-center cursor-pointer"
         >
-          <button type="submit" [disabled]="loginForm.invalid" class="text-base">Log</button>
-          <img src="/icons/chevron-right.svg" class="inline h-5 w-5 ml-2" />
+          <button type="submit" class="text-base">Log</button>
+          <img class="cursor-pointer" src="/icons/chevron-right.svg" class="inline h-5 w-5 ml-2" />
         </div>
       </form>
     </div>
