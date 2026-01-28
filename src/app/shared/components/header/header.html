@@ -1,0 +1,222 @@
+<header
+  [ngClass]="isMenuOpen ? 'h-full rounded-none' : 'h-20 rounded-lg'"
+  class="w-full px-5 fixed md:left-1/2 md:-translate-x-1/2 bg-white rounded-lg md:h-auto md:max-w-6xl mx-auto md:border-b md:border-gray-200"
+>
+  <div
+    class="h-full px-3 pb-3 my-auto gap-4 md:max-w-7xl md:mx-auto md:h-20 flex flex-col md:flex-row md:items-center md:justify-between md:p-0"
+  >
+    <!-- Logo / Title -->
+    <div
+      class="min-h-20 h-20 shrink-0 flex items-center justify-between text-gray-500 border-b border-gray-200 md:border-transparent"
+    >
+      <h1 class="text-2xl font-semibold">Clinic Manager</h1>
+      <button (click)="toggleMenu()" class="md:hidden flex items-center cursor-pointer">
+        <svg
+          width="23"
+          height="16"
+          viewBox="0 0 23 16"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M21.2 5.64446H1.19995"
+            stroke="CurrentColor"
+            stroke-width="2.4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M21.2 1.2H1.19995"
+            stroke="CurrentColor"
+            stroke-width="2.4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M21.2 10.0889H1.19995"
+            stroke="CurrentColor"
+            stroke-width="2.4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M21.2 14.5333H1.19995"
+            stroke="CurrentColor"
+            stroke-width="2.4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Right side -->
+    <div
+      [ngClass]="{
+        hidden: !isMenuOpen,
+        flex: isMenuOpen,
+      }"
+      class="h-full flex-col justify-between md:flex md:flex-row md:items-center md:gap-6 md:py-0 md:px-0"
+    >
+      <!-- Navigation -->
+      <nav>
+        <ul class="flex flex-col gap-5 md:flex-row md:items-center md:gap-8">
+          <li (click)="toggleMenu()">
+            <a
+              routerLink="/dashboard"
+              class="flex items-center py-4 gap-2 text-gray-400 hover:text-gray-700 cursor-pointer hover:bg-gray-100 md:hover:bg-transparent rounded-lg px-3"
+            >
+              <svg
+                class="w-5 h-5 cursor-pointer transition"
+                viewBox="0 0 17 17"
+                fill="currentColor"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M4.93359 9.55762C6.10847 9.55776 7.0498 10.5091 7.0498 11.6924V14.5332C7.04974 15.7081 6.10843 16.6659 4.93359 16.666H2.11621C0.949794 16.6658 6.67321e-05 15.708 0 14.5332V11.6924C0 10.5092 0.949753 9.55787 2.11621 9.55762H4.93359ZM14.5498 9.55762C15.7165 9.55762 16.667 10.509 16.667 11.6924V14.5332C16.6669 15.7081 15.7164 16.666 14.5498 16.666H11.7334C10.5585 16.666 9.61725 15.7081 9.61719 14.5332V11.6924C9.61719 10.5091 10.5584 9.55763 11.7334 9.55762H14.5498ZM4.93359 0C6.10835 0.000141408 7.0496 0.958215 7.0498 2.13379V4.97461C7.0498 6.15786 6.10847 7.10826 4.93359 7.1084H2.11621C0.949753 7.10815 0 6.15779 0 4.97461V2.13379C0.000203274 0.958281 0.949877 0.000249538 2.11621 0H4.93359ZM14.5498 0C15.7163 0 16.6668 0.958128 16.667 2.13379V4.97461C16.667 6.15794 15.7165 7.1084 14.5498 7.1084H11.7334C10.5584 7.10838 9.61719 6.15793 9.61719 4.97461V2.13379C9.61739 0.958138 10.5585 1.51692e-05 11.7334 0H14.5498Z"
+                />
+              </svg>
+
+              <span class="font-medium">Dashboard</span>
+            </a>
+          </li>
+
+          <li (click)="toggleMenu()">
+            <a
+              routerLink="/patients"
+              class="flex items-center py-4 gap-2 text-gray-400 hover:text-gray-700 cursor-pointer hover:bg-gray-100 md:hover:bg-transparent rounded-lg px-3"
+            >
+              <svg
+                class="w-7 h-7 cursor-pointer transition"
+                viewBox="0 -960 960 960"
+                fill="currentColor"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M640-400q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35ZM400-160v-76q0-21 10-40t28-30q45-27 95.5-40.5T640-360q56 0 106.5 13.5T842-306q18 11 28 30t10 40v76H400Zm86-80h308q-35-20-74-30t-80-10q-41 0-80 10t-74 30Zm154-240q17 0 28.5-11.5T680-520q0-17-11.5-28.5T640-560q-17 0-28.5 11.5T600-520q0 17 11.5 28.5T640-480Zm0-40Zm0 280ZM120-400v-80h320v80H120Zm0-320v-80h480v80H120Zm324 160H120v-80h360q-14 17-22.5 37T444-560Z"
+                />
+              </svg>
+              <span class="font-medium">Patients</span>
+            </a>
+          </li>
+
+          <li (click)="toggleMenu()">
+            <a
+              routerLink="/employees"
+              class="flex items-center py-4 gap-2 text-gray-400 hover:text-gray-700 cursor-pointer hover:bg-gray-100 md:hover:bg-transparent rounded-lg px-3"
+            >
+              <svg
+                class="w-7 h-7 cursor-pointer transition"
+                viewBox="0 -960 960 960"
+                fill="currentColor"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M160-80q-33 0-56.5-23.5T80-160v-440q0-33 23.5-56.5T160-680h200v-120q0-33 23.5-56.5T440-880h80q33 0 56.5 23.5T600-800v120h200q33 0 56.5 23.5T880-600v440q0 33-23.5 56.5T800-80H160Zm0-80h640v-440H600q0 33-23.5 56.5T520-520h-80q-33 0-56.5-23.5T360-600H160v440Zm80-80h240v-18q0-17-9.5-31.5T444-312q-20-9-40.5-13.5T360-330q-23 0-43.5 4.5T276-312q-17 8-26.5 22.5T240-258v18Zm320-60h160v-60H560v60Zm-200-60q25 0 42.5-17.5T420-420q0-25-17.5-42.5T360-480q-25 0-42.5 17.5T300-420q0 25 17.5 42.5T360-360Zm200-60h160v-60H560v60ZM440-600h80v-200h-80v200Zm40 220Z"
+                />
+              </svg>
+              <span class="font-medium">Employees</span>
+            </a>
+          </li>
+
+          <li (click)="toggleMenu()">
+            <a
+              routerLink="/reports"
+              class="flex items-center py-4 gap-2 text-gray-400 hover:text-gray-700 cursor-pointer hover:bg-gray-100 md:hover:bg-transparent rounded-lg px-3"
+            >
+              <svg
+                class="w-7 h-7 cursor-pointer transition"
+                viewBox="0 -960 960 960"
+                fill="currentColor"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h168q13-36 43.5-58t68.5-22q38 0 68.5 22t43.5 58h168q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm80-80h280v-80H280v80Zm0-160h400v-80H280v80Zm0-160h400v-80H280v80Zm200-190q13 0 21.5-8.5T510-820q0-13-8.5-21.5T480-850q-13 0-21.5 8.5T450-820q0 13 8.5 21.5T480-790ZM200-200v-560 560Z"
+                />
+              </svg>
+              <span class="font-medium">Reports</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Actions -->
+      <div class="flex items-center gap-8 md:gap-3">
+        <!-- Notifications -->
+        <div class="relative cursor-pointer">
+          <svg
+            class="h-6 w-6 text-gray-400 hover:text-gray-700"
+            viewBox="0 0 17 20"
+            fill="currentColor"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M9.66406 17.0312C10.1613 17.046 10.65 17.1671 11.0957 17.3867H11.1221C11.4945 17.6906 11.5582 18.2338 11.2656 18.6143C10.7329 19.3766 9.88011 19.8573 8.94824 19.9209C7.99086 20.0351 7.02686 19.7694 6.26465 19.1826C5.8727 18.9138 5.61751 18.489 5.56641 18.0186C5.56641 17.5208 6.03153 17.2892 6.46094 17.1914C6.96391 17.0855 7.47706 17.0317 7.99121 17.0312H9.66406ZM8.53613 0C11.6315 0 14.8261 2.23994 15.1572 5.48438C15.2109 6.15106 15.1573 6.84493 15.2109 7.52051C15.3866 8.39161 15.7909 9.20133 16.3828 9.86719C16.7508 10.4144 16.964 11.0499 17 11.707V11.9111C17.0055 12.7979 16.6877 13.657 16.1055 14.3291C15.3674 15.1183 14.3657 15.6141 13.2871 15.7246C10.1005 16.1335 6.87408 16.1335 3.6875 15.7246C2.59634 15.6225 1.58101 15.1259 0.833984 14.3291C0.269941 13.6505 -0.0259242 12.7908 0.00195312 11.9111V11.707C0.0368728 11.0523 0.243715 10.4181 0.601562 9.86719C1.19611 9.20072 1.60581 8.39188 1.79102 7.52051C1.84469 6.84493 1.79105 6.15995 1.84473 5.48438C2.18482 2.23996 5.31613 0 8.44727 0H8.53613Z"
+              fill="currentColor"
+            />
+          </svg>
+          <span class="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+        </div>
+
+        <!-- Messages -->
+        <div class="relative cursor-pointer">
+          <svg
+            class="h-6 w-6 text-gray-400 hover:text-gray-700"
+            viewBox="0 0 20 18"
+            fill="currentColor"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M14.939 0C16.28 0 17.57 0.53 18.519 1.481C19.469 2.43 20 3.71 20 5.05V12.95C20 15.74 17.73 18 14.939 18H5.06C2.269 18 0 15.74 0 12.95V5.05C0 2.26 2.259 0 5.06 0H14.939ZM16.53 6.54L16.61 6.46C16.849 6.17 16.849 5.75 16.599 5.46C16.46 5.311 16.269 5.22 16.07 5.2C15.86 5.189 15.66 5.26 15.509 5.4L11 9C10.42 9.481 9.589 9.481 9 9L4.5 5.4C4.189 5.17 3.759 5.2 3.5 5.47C3.23 5.74 3.2 6.17 3.429 6.47L3.56 6.6L8.11 10.15C8.67 10.59 9.349 10.83 10.06 10.83C10.769 10.83 11.46 10.59 12.019 10.15L16.53 6.54Z"
+              fill="currentColor"
+            />
+          </svg>
+          <span class="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+        </div>
+
+        <!-- User menu -->
+        <div
+          class="flex items-center ml-auto px-3 py-2 gap-2 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200 transition"
+        >
+          <!-- Avatar -->
+          <svg
+            class="w-8 h-8 rounded-full shrink-0"
+            viewBox="0 0 1024 1024"
+            version="1.1"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M819.2 729.088V757.76c0 33.792-27.648 61.44-61.44 61.44H266.24c-33.792 0-61.44-27.648-61.44-61.44v-28.672c0-74.752 87.04-119.808 168.96-155.648 3.072-1.024 5.12-2.048 8.192-4.096 6.144-3.072 13.312-3.072 19.456 1.024C434.176 591.872 472.064 604.16 512 604.16c39.936 0 77.824-12.288 110.592-32.768 6.144-4.096 13.312-4.096 19.456-1.024 3.072 1.024 5.12 2.048 8.192 4.096 81.92 34.816 168.96 79.872 168.96 154.624z"
+            />
+            <path
+              d="M359.424 373.76a168.96 152.576 90 1 0 305.152 0 168.96 152.576 90 1 0-305.152 0Z"
+            />
+          </svg>
+
+          <!-- Nombre -->
+          <span class="hidden lg:block text-sm font-medium text-gray-700 whitespace-nowrap">
+            Name
+          </span>
+
+          <!-- Flecha -->
+          <svg
+            class="hidden rotate-90 lg:block w-5 h-5 shrink-0"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M9.5 17L14.5 12L9.5 7"
+              stroke="currentColor"
+              stroke-width="2.03636"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
