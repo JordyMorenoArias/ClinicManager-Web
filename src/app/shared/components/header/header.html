@@ -64,6 +64,8 @@
           <li (click)="toggleMenu()">
             <a
               routerLink="/dashboard"
+              routerLinkActive="bg-gray-100 md:bg-transparent text-gray-700"
+              [routerLinkActiveOptions]="{ exact: true }"
               class="flex items-center py-4 gap-2 text-gray-400 hover:text-gray-700 cursor-pointer hover:bg-gray-100 md:hover:bg-transparent rounded-lg px-3"
             >
               <svg
@@ -84,6 +86,8 @@
           <li (click)="toggleMenu()">
             <a
               routerLink="/patients"
+              routerLinkActive="bg-gray-100 md:bg-transparent text-gray-700"
+              [routerLinkActiveOptions]="{ exact: true }"
               class="flex items-center py-4 gap-2 text-gray-400 hover:text-gray-700 cursor-pointer hover:bg-gray-100 md:hover:bg-transparent rounded-lg px-3"
             >
               <svg
@@ -103,6 +107,8 @@
           <li (click)="toggleMenu()">
             <a
               routerLink="/employees"
+              routerLinkActive="bg-gray-100 md:bg-transparent text-gray-700"
+              [routerLinkActiveOptions]="{ exact: true }"
               class="flex items-center py-4 gap-2 text-gray-400 hover:text-gray-700 cursor-pointer hover:bg-gray-100 md:hover:bg-transparent rounded-lg px-3"
             >
               <svg
@@ -122,6 +128,8 @@
           <li (click)="toggleMenu()">
             <a
               routerLink="/reports"
+              routerLinkActive="bg-gray-100 md:bg-transparent text-gray-700"
+              [routerLinkActiveOptions]="{ exact: true }"
               class="flex items-center py-4 gap-2 text-gray-400 hover:text-gray-700 cursor-pointer hover:bg-gray-100 md:hover:bg-transparent rounded-lg px-3"
             >
               <svg
