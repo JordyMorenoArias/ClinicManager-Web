@@ -1,16 +1,9 @@
 import { UserDTO } from '../dtos/user.dto';
-import { User } from '../models/user.dto';
+import { User } from '../models/user.model';
 
 export class UserMapper {
   public static fromDTO(dto: UserDTO): User {
-    return {
-      id: dto.id,
-      fullName: dto.fullName,
-      username: dto.username,
-      email: dto.email,
-      phoneNumber: dto.phoneNumber,
-      isActive: dto.isActive,
-    };
+    return new User(dto.id, dto.fullName, dto.username, dto.email, dto.phoneNumber, dto.isActive);
   }
 
   public static toDTO(user: User): UserDTO {
