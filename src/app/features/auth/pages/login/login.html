@@ -15,7 +15,11 @@
       </div>
 
       <!-- Form -->
-      <form [formGroup]="loginForm" class="flex flex-col flex-1 justify-around">
+      <form
+        [formGroup]="loginForm"
+        class="flex flex-col flex-1 justify-around"
+        (ngSubmit)="login()"
+      >
         <div class="flex items-center gap-2 p-4 rounded-md bg-gray-100">
           <svg
             class="w-6 h-6 rounded-full shrink-0 text-gray-400"
