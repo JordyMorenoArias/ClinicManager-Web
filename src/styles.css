@@ -10,3 +10,21 @@ html, body {
 body {
     background-color: var(--bg-white);
 }
+
+.mat-mdc-form-field .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+  background-color: white; 
+  border-bottom: 2px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+}
+
+.mat-mdc-form-field .mat-date-range-input-inner  {
+  color: var(--color-gray-500);
+}
+
+.mat-mdc-select-value-text{
+  color: var(--color-gray-500);
+}
+
+.mdc-line-ripple {
+  display: none;
+}
