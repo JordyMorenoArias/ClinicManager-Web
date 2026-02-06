@@ -2,7 +2,6 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { AuthLoginDTO } from '../dtos/auth-login.dto';
 import { map, Observable } from 'rxjs';
-import { UserDTO } from '../../user/dtos/user.dto';
 import { environment } from '../../../../environments/environment.development';
 import { User } from '../../user/models/user.model';
 import { UserMapper } from '../../user/mappers/user.mapper';

@@ -1,21 +1,22 @@
-import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { AuthLoginDTO } from '../../dtos/auth-login.dto';
 import { Router, RouterModule } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, RouterModule],
+  imports: [AsyncPipe, ReactiveFormsModule, RouterModule],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
 export class Login {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
-  private cdr = inject(ChangeDetectorRef);
   private router = inject(Router);
-  public errorMessage: string = '';
+  public errorMessage$ = new BehaviorSubject<string | null>(null);
 
   public loginForm = this.fb.group({
     username: ['', [Validators.required]],
@@ -29,12 +30,11 @@ export class Login {
         password: this.loginForm.value.password!,
       };
       this.authService.login(data).subscribe({
-        next: (response) => {
+        next: () => {
           this.router.navigate(['/dashboard']);
         },
         error: (error) => {
-          this.errorMessage = error.error?.message || 'An error occurred during login.';
-          this.cdr.detectChanges();
+          this.errorMessage$.next(error.error?.message || 'An error occurred during login.');
         },
       });
     }

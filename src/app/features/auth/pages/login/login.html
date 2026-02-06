@@ -63,9 +63,10 @@
           />
         </div>
 
-        <div>
-          <p class="text-red-600 text-sm mb-2">{{ errorMessage }}</p>
-        </div>
+        @if (errorMessage$ | async; as error) {
+          <p class="text-red-600 text-sm mb-2">{{ error }}</p>
+        }
+
         <button
           type="submit"
           [disabled]="loginForm.invalid"
