@@ -29,13 +29,23 @@
     <mat-form-field appearance="fill">
       <mat-label>Select</mat-label>
       <mat-select formControlName="status" placeholder="Status">
-        <mat-option [value]="AppointmentStatusEnum.Pending">Pending</mat-option>
-        <mat-option [value]="AppointmentStatusEnum.Confirmed">Confirmed</mat-option>
-        <mat-option [value]="AppointmentStatusEnum.Completed">Completed</mat-option>
-        <mat-option [value]="AppointmentStatusEnum.Cancelled">Cancelled</mat-option>
-        <mat-option [value]="AppointmentStatusEnum.NoShow">No Show</mat-option>
+        <mat-option [value]="appointmentStatusEnum.Pending">Pending</mat-option>
+        <mat-option [value]="appointmentStatusEnum.Confirmed">Confirmed</mat-option>
+        <mat-option [value]="appointmentStatusEnum.Completed">Completed</mat-option>
+        <mat-option [value]="appointmentStatusEnum.Cancelled">Cancelled</mat-option>
+        <mat-option [value]="appointmentStatusEnum.NoShow">No Show</mat-option>
       </mat-select>
     </mat-form-field>
   </form>
-  <section class="mt-6"></section>
+  <section class="flex flex-col mt-6 gap-4">
+    @if (pagedResult$ | async; as pagedResult) {
+      @for (appointment of pagedResult.items; track appointment.id) {
+        <app-appointment-card [appointment]="appointment"> </app-appointment-card>
+      } @empty {
+        <p class="text-center text-gray-500 mt-10">
+          No appointments found for the selected filters.
+        </p>
+      }
+    }
+  </section>
 </main>
