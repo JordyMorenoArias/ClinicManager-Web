@@ -8,6 +8,6 @@ export interface AppointmentQueryParametersDTO {
   endDateFilter?: string;
   doctorId?: string;
   patientId?: string;
-  appointmentStatus?: AppointmentStatusEnum;
+  status?: AppointmentStatusEnum;
   sortBy?: AppointmentSortByEnum;
 }

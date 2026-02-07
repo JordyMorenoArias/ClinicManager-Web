@@ -1,4 +1,4 @@
-<main class="h-full w-full pt-20 md:max-w-6xl mx-auto px-6">
+<main class="w-full pt-20 pb-4 md:max-w-6xl mx-auto px-6">
   <div class="flex justify-between items-center my-6">
     <h1 class="text-2xl font-semibold">Manage, edit or add new appointments</h1>
     <button
@@ -12,8 +12,18 @@
     <mat-form-field appearance="fill">
       <mat-label>Enter a date range</mat-label>
       <mat-date-range-input [rangePicker]="picker">
-        <input matStartDate formControlName="start" placeholder="Start date" />
-        <input matEndDate formControlName="end" placeholder="End date" />
+        <input
+          matStartDate
+          (dateChange)="changeFilter()"
+          formControlName="start"
+          placeholder="Start date"
+        />
+        <input
+          matEndDate
+          (dateChange)="changeFilter()"
+          formControlName="end"
+          placeholder="End date"
+        />
       </mat-date-range-input>
       <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-date-range-picker #picker></mat-date-range-picker>
@@ -28,12 +38,12 @@
 
     <mat-form-field appearance="fill">
       <mat-label>Select</mat-label>
-      <mat-select formControlName="status" placeholder="Status">
+      <mat-select (selectionChange)="changeFilter()" formControlName="status" placeholder="Status">
         <mat-option [value]="appointmentStatusEnum.Pending">Pending</mat-option>
         <mat-option [value]="appointmentStatusEnum.Confirmed">Confirmed</mat-option>
         <mat-option [value]="appointmentStatusEnum.Completed">Completed</mat-option>
         <mat-option [value]="appointmentStatusEnum.Cancelled">Cancelled</mat-option>
-        <mat-option [value]="appointmentStatusEnum.NoShow">No Show</mat-option>
+        <mat-option [value]="">All</mat-option>
       </mat-select>
     </mat-form-field>
   </form>
@@ -48,4 +58,41 @@
       }
     }
   </section>
+
+  @if (pagedResult$ | async; as paged) {
+    <nav
+      class="w-full flex justify-center gap-2 mt-8 py-3 bg-gray-50 border-t border-gray-200 rounded-lg"
+    >
+      <!-- Prev -->
+      <button
+        (click)="changePage(paged.page - 1)"
+        [disabled]="paged.page === 1"
+        class="w-9 h-9 rounded-full border text-gray-400 border-gray-200 hover:bg-gray-100 disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed"
+      >
+        ‹
+      </button>
+
+      <!-- Pages -->
+      <button
+        *ngFor="let page of getPages(paged)"
+        (click)="changePage(page)"
+        class="w-9 h-9 rounded-full text-sm font-medium border transition-colors cursor-pointer"
+        [ngClass]="{
+          'bg-blue-600 text-white border-blue-600': page === paged.page,
+          'bg-white text-gray-500 border-gray-200 hover:bg-gray-100': page !== paged.page,
+        }"
+      >
+        {{ page }}
+      </button>
+
+      <!-- Next -->
+      <button
+        (click)="changePage(paged.page + 1)"
+        [disabled]="paged.page === paged.totalPages"
+        class="w-9 h-9 rounded-full border text-gray-400 border-gray-200 hover:bg-gray-100 disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed"
+      >
+        ›
+      </button>
+    </nav>
+  }
 </main>

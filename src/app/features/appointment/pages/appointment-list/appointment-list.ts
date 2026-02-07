@@ -13,11 +13,12 @@ import { PagedResultDTO } from '../../../../shared/dtos/paged-result.dto';
 import { Appointment } from '../../models/appointment.model';
 import { AppointmentCard } from '../../components/appointment-card/appointment-card';
 import { map, Observable } from 'rxjs';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-appointment-list',
   imports: [
+    CommonModule,
     AsyncPipe,
     RouterModule,
     MatFormFieldModule,
@@ -35,9 +36,9 @@ import { AsyncPipe } from '@angular/common';
 export class AppointmentList implements OnInit {
   private appointmentService = inject(AppointmentService);
   private fb = inject(FormBuilder);
-  private queryParams: AppointmentQueryParametersDTO = {
+  queryParams: AppointmentQueryParametersDTO = {
     page: 1,
-    pageSize: 10,
+    pageSize: 8,
   };
 
   appointmentStatusEnum = AppointmentStatusEnum;
@@ -46,13 +47,12 @@ export class AppointmentList implements OnInit {
   formFilters = this.fb.group({
     start: new FormControl<Date | null>(null),
     end: new FormControl<Date | null>(null),
-    status: new FormControl<AppointmentStatusEnum | null>(null),
+    status: new FormControl<AppointmentStatusEnum | null>(AppointmentStatusEnum.Pending),
   });
 
   ngOnInit(): void {
-    const statusValue = this.formFilters.get('status')!.value;
-    if (statusValue !== null) {
-      this.queryParams.appointmentStatus = statusValue;
+    if (this.formFilters.get('status')!.value) {
+      this.queryParams.status = this.formFilters.get('status')!.value!;
     }
 
     if (this.formFilters.get('start')!.value) {
@@ -63,6 +63,51 @@ export class AppointmentList implements OnInit {
       this.queryParams.endDateFilter = this.formFilters.get('end')!.value!.toISOString();
     }
 
+    this.loadAppointments();
+  }
+
+  changeFilter(): void {
+    const status = this.formFilters.get('status')!.value;
+    if (status) {
+      this.queryParams.status = status;
+    } else {
+      delete this.queryParams.status;
+    }
+
+    if (this.formFilters.get('start')!.value) {
+      this.queryParams.startDateFilter = this.formFilters.get('start')!.value!.toISOString();
+    }
+
+    if (this.formFilters.get('end')!.value) {
+      this.queryParams.endDateFilter = this.formFilters.get('end')!.value!.toISOString();
+    }
+
+    this.queryParams.page = 1;
+    this.loadAppointments();
+  }
+
+  changePage(page: number): void {
+    if (page < 1) return;
+
+    this.queryParams.page = page;
+    this.loadAppointments();
+  }
+
+  getPages(paged: PagedResultDTO<any>): number[] {
+    const range = 5;
+
+    const start = Math.max(paged.page - range, 1);
+    const end = Math.min(paged.page + range, paged.totalPages);
+
+    const pages: number[] = Array.from({ length: end - start + 1 }, (_, i) => start + i);
+
+    pages[0] = 1;
+    pages[pages.length - 1] = paged.totalPages;
+
+    return pages;
+  }
+
+  private loadAppointments(): void {
     this.pagedResult$ = this.appointmentService
       .getAppointments(this.queryParams)
       .pipe(map((response) => response.body!));
