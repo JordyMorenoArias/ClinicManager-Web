@@ -1,7 +1,7 @@
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { AuthLoginDTO } from '../dtos/auth-login.dto';
-import { map, Observable } from 'rxjs';
+import { catchError, map, Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment.development';
 import { User } from '../../user/models/user.model';
 import { UserMapper } from '../../user/mappers/user.mapper';
@@ -30,5 +30,12 @@ export class AuthService {
           });
         }),
       );
+  }
+
+  public isLoggedIn(): Observable<boolean> {
+    return this.http.get(`${this.apiUrl}/auth/me`, { withCredentials: true }).pipe(
+      map(() => true),
+      catchError(() => [false]),
+    );
   }
 }
