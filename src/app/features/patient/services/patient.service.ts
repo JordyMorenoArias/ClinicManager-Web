@@ -29,6 +29,7 @@ export class PatientService {
             throw new Error('Login response body is null');
           }
 
+          // Map each PatientDto to Patient
           const mappedBody: PagedResultDTO<Patient> = {
             ...response.body,
             items: response.body.items.map((item) => PatientMapper.fromDTO(item)),

@@ -27,6 +27,7 @@ import { AsyncPipe, CommonModule } from '@angular/common';
     ReactiveFormsModule,
     MatSelectModule,
     AppointmentCard,
+    AsyncPipe,
   ],
   templateUrl: './appointment-list.html',
   styleUrl: './appointment-list.css',
@@ -45,9 +46,9 @@ export class AppointmentList implements OnInit {
   pagedResult$!: Observable<PagedResultDTO<Appointment>>;
 
   formFilters = this.fb.group({
-    start: new FormControl<Date | null>(null),
-    end: new FormControl<Date | null>(null),
-    status: new FormControl<AppointmentStatusEnum | null>(AppointmentStatusEnum.Pending),
+    start: [null],
+    end: [null],
+    status: [AppointmentStatusEnum.Pending],
   });
 
   ngOnInit(): void {
@@ -56,11 +57,11 @@ export class AppointmentList implements OnInit {
     }
 
     if (this.formFilters.get('start')!.value) {
-      this.queryParams.startDateFilter = this.formFilters.get('start')!.value!.toISOString();
+      this.queryParams.startDateFilter = this.formFilters.get('start')!.value!;
     }
 
     if (this.formFilters.get('end')!.value) {
-      this.queryParams.endDateFilter = this.formFilters.get('end')!.value!.toISOString();
+      this.queryParams.endDateFilter = this.formFilters.get('end')!.value!;
     }
 
     this.loadAppointments();
@@ -75,11 +76,11 @@ export class AppointmentList implements OnInit {
     }
 
     if (this.formFilters.get('start')!.value) {
-      this.queryParams.startDateFilter = this.formFilters.get('start')!.value!.toISOString();
+      this.queryParams.startDateFilter = this.formFilters.get('start')!.value!;
     }
 
     if (this.formFilters.get('end')!.value) {
-      this.queryParams.endDateFilter = this.formFilters.get('end')!.value!.toISOString();
+      this.queryParams.endDateFilter = this.formFilters.get('end')!.value!;
     }
 
     this.queryParams.page = 1;
