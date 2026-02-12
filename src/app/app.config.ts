@@ -14,11 +14,5 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
     provideNativeDateAdapter(),
-    {
-      provide: MAT_TIMEPICKER_CONFIG,
-      useValue: {
-        interval: 15,
-      },
-    },
   ],
 };

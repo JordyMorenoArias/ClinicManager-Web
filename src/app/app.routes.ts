@@ -4,6 +4,7 @@ import { BlankLayout } from './layouts/blank-layout/blank-layout';
 import { Login } from './features/auth/pages/login/login';
 import { AppointmentList } from './features/appointment/pages/appointment-list/appointment-list';
 import { authGuard } from './core/guards/auth-guard';
+import { AddAppointment } from './features/appointment/pages/add-appointment/add-appointment';
 
 export const routes: Routes = [
   {
@@ -19,6 +20,10 @@ export const routes: Routes = [
       {
         path: 'dashboard',
         component: AppointmentList,
+      },
+      {
+        path: 'appointments',
+        component: AddAppointment,
       },
     ],
   },
