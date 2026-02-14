@@ -30,6 +30,8 @@ import { AddAppointmentDto } from '../../dtos/add-appointment.dto';
 import { AppointmentService } from '../../services/appointment.service';
 import { Router } from '@angular/router';
 import { UserQueryParametersDTO } from '../../../user/dtos/user-query-parameters.dto';
+import { PatientSelectCard } from '../../../patient/components/patient-select-card/patient-select-card';
+import { DoctorSelectCard } from '../../../user/components/doctor-select-card/doctor-select-card';
 
 @Component({
   selector: 'app-add-appointment',
@@ -42,6 +44,8 @@ import { UserQueryParametersDTO } from '../../../user/dtos/user-query-parameters
     FormsModule,
     AsyncPipe,
     CommonModule,
+    PatientSelectCard,
+    DoctorSelectCard,
   ],
   templateUrl: './add-appointment.html',
   styleUrl: './add-appointment.css',
@@ -93,7 +97,7 @@ export class AddAppointment implements OnInit {
         this.activeSearch = 'patient';
         this.patientQueryParameters.searchTerm = this.patientSearch.value ?? '';
       }),
-      switchMap((searchTerm) => {
+      switchMap(() => {
         return this.patientService.getPatients(this.patientQueryParameters);
       }),
       map((result) => result.body),
@@ -107,7 +111,7 @@ export class AddAppointment implements OnInit {
         this.activeSearch = 'doctor';
         this.userQueryParameters.searchTerm = this.doctorSearch.value ?? '';
       }),
-      switchMap((searchTerm) => {
+      switchMap(() => {
         return this.userService.getUsers(this.userQueryParameters);
       }),
       map((result) => result.body),
@@ -166,9 +170,6 @@ export class AddAppointment implements OnInit {
       0,
     );
 
-    console.log('Local:', appointmentDate);
-    console.log('ISO:', appointmentDate.toISOString());
-
     const newAppointment: AddAppointmentDto = {
       patientId: formValue.patientId!,
       doctorId: formValue.doctorId!,
@@ -177,7 +178,7 @@ export class AddAppointment implements OnInit {
     };
 
     this.appointmentService.addAppointment(newAppointment).subscribe({
-      next: (response) => {
+      next: () => {
         this.router.navigate(['/dashboard']);
       },
       error: (error) => {

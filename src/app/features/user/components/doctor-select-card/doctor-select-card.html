@@ -1,0 +1,35 @@
+<div
+  [class.shadow-blue-300]="selectedDoctorId === doctor.id.toString()"
+  class="w-full flex items-center justify-between p-6 bg-white border-2 border-transparent shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer rounded-lg"
+>
+  <!-- Left Content -->
+  <div class="flex items-center gap-4">
+    <!-- Avatar -->
+    <div
+      class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center text-green-600 font-semibold text-lg"
+    >
+      {{ doctor.fullName.charAt(0) }}
+    </div>
+
+    <!-- Info -->
+    <div class="flex flex-col">
+      <span class="text-base font-semibold text-gray-800"> Dr. {{ doctor.fullName }} </span>
+
+      <span class="text-sm text-gray-500">
+        {{ doctor.email }}
+      </span>
+
+      <span class="text-sm text-gray-400">
+        {{ doctor.phoneNumber }}
+      </span>
+    </div>
+  </div>
+
+  <!-- Right Badge -->
+  <div
+    class="px-3 py-1 text-sm rounded-full font-medium"
+    [ngClass]="doctor.isActive ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-600'"
+  >
+    {{ doctor.isActive ? 'Activo' : 'Inactivo' }}
+  </div>
+</div>

@@ -61,84 +61,22 @@
     @if (activeSearch === 'patient') {
       @if (patientsResult$ | async; as patients) {
         @for (patient of patients?.items ?? []; track patient.id) {
-          <div
+          <app-patient-select-card
+            [patient]="patient"
+            [selectedPatientId]="selectedPatientId"
             (click)="selectPatient(patient)"
-            [class.shadow-blue-300]="selectedPatientId === patient.id.toString()"
-            class="w-full flex items-center justify-between p-6 bg-white shadow-md hover:shadow-blue-300 transition-all duration-200 cursor-pointer rounded-lg"
-          >
-            <!-- Left Content -->
-            <div class="flex items-center gap-4">
-              <!-- Avatar -->
-              <div
-                class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-semibold text-lg"
-              >
-                {{ patient.fullName.charAt(0) }}
-              </div>
-
-              <!-- Info -->
-              <div class="flex flex-col">
-                <span class="text-base font-semibold text-gray-800">
-                  {{ patient.fullName }}
-                </span>
-
-                <span class="text-sm text-gray-500"> ID: {{ patient.identification }} </span>
-
-                <span class="text-sm text-gray-400">
-                  {{ patient.phone }}
-                </span>
-              </div>
-            </div>
-
-            <!-- Right Badge -->
-            <div class="px-3 py-1 text-sm rounded-full bg-green-100 text-green-700 font-medium">
-              {{ patient.dateOfBirth | date: 'dd/MM/yyyy' }}
-            </div>
-          </div>
+          ></app-patient-select-card>
         }
       }
     } @else if (activeSearch === 'doctor') {
       @if (doctorsResult$ | async; as doctors) {
         @for (doctor of doctors?.items ?? []; track doctor.id) {
-          <div
+          <app-doctor-select-card
+            [doctor]="doctor"
+            [selectedDoctorId]="selectedDoctorId"
             (click)="selectDoctor(doctor)"
-            [class.shadow-blue-300]="selectedDoctorId === doctor.id.toString()"
-            class="w-full flex items-center justify-between p-6 bg-white border-2 border-transparent shadow-md hover:shadow-lg hover:border-blue-300 transition-all duration-200 cursor-pointer rounded-lg"
           >
-            <!-- Left Content -->
-            <div class="flex items-center gap-4">
-              <!-- Avatar -->
-              <div
-                class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center text-green-600 font-semibold text-lg"
-              >
-                {{ doctor.fullName.charAt(0) }}
-              </div>
-
-              <!-- Info -->
-              <div class="flex flex-col">
-                <span class="text-base font-semibold text-gray-800">
-                  Dr. {{ doctor.fullName }}
-                </span>
-
-                <span class="text-sm text-gray-500">
-                  {{ doctor.email }}
-                </span>
-
-                <span class="text-sm text-gray-400">
-                  {{ doctor.phoneNumber }}
-                </span>
-              </div>
-            </div>
-
-            <!-- Right Badge -->
-            <div
-              class="px-3 py-1 text-sm rounded-full font-medium"
-              [ngClass]="
-                doctor.isActive ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-600'
-              "
-            >
-              {{ doctor.isActive ? 'Activo' : 'Inactivo' }}
-            </div>
-          </div>
+          </app-doctor-select-card>
         }
       }
     }
