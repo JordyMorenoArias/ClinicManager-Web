@@ -11,7 +11,7 @@ export class Appointment {
     public lastModifiedById: number,
     public doctorId: number,
     public doctor: User,
-    public appointmentDate: Date,
+    public date: Date,
     public reason: string,
     public appointmentStatus: AppointmentStatusEnum,
     public createdAt: Date,

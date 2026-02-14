@@ -6,7 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { FormBuilder, FormControl, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { AppointmentStatusEnum } from '../../enums/appointment-status.enum';
 import { AppointmentService } from '../../services/appointment.service';
 import { PagedResultDTO } from '../../../../shared/dtos/paged-result.dto';

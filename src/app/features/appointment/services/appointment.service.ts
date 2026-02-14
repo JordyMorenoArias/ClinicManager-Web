@@ -7,6 +7,7 @@ import { PagedResultDTO } from '../../../shared/dtos/paged-result.dto';
 import { Appointment } from '../models/appointment.model';
 import { AppointmentDto } from '../dtos/appointment.dto';
 import { AppointmentMapper } from '../mappers/appointment.mapper';
+import { AddAppointmentDto } from '../dtos/add-appointment.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -36,6 +37,24 @@ export class AppointmentService {
             items: response.body.items.map((item) => AppointmentMapper.fromDTO(item)),
           };
 
+          return response.clone({ body: mappedBody });
+        }),
+      );
+  }
+
+  addAppointment(newAppointment: AddAppointmentDto): Observable<HttpResponse<Appointment>> {
+    return this.http
+      .post<AppointmentDto>(this.apiUrl + '/appointment', newAppointment, {
+        observe: 'response',
+        withCredentials: true,
+      })
+      .pipe(
+        map((response: HttpResponse<AppointmentDto>) => {
+          if (!response.body) {
+            throw new Error('Add appointment response body is null');
+          }
+
+          const mappedBody: Appointment = AppointmentMapper.fromDTO(response.body);
           return response.clone({ body: mappedBody });
         }),
       );

@@ -9,7 +9,7 @@ export interface AppointmentDto {
   lastModifiedById: number;
   doctorId: number;
   doctor: UserDTO;
-  appointmentDate: string;
+  date: string;
   reason: string;
   status: number;
   createdAt: string;

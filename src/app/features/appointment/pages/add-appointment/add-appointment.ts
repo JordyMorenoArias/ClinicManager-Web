@@ -26,6 +26,10 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatTimepickerModule } from '@angular/material/timepicker';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { PagedResultDTO } from '../../../../shared/dtos/paged-result.dto';
+import { AddAppointmentDto } from '../../dtos/add-appointment.dto';
+import { AppointmentService } from '../../services/appointment.service';
+import { Router } from '@angular/router';
+import { UserQueryParametersDTO } from '../../../user/dtos/user-query-parameters.dto';
 
 @Component({
   selector: 'app-add-appointment',
@@ -45,6 +49,8 @@ import { PagedResultDTO } from '../../../../shared/dtos/paged-result.dto';
 export class AddAppointment implements OnInit {
   private patientService = inject(PatientService);
   private userService = inject(UserService);
+  private appointmentService = inject(AppointmentService);
+  private router = inject(Router);
   private fb = inject(FormBuilder);
 
   readonly form = this.fb.group({
@@ -52,7 +58,7 @@ export class AddAppointment implements OnInit {
     doctorId: ['', Validators.required],
     appointmentDate: [null, Validators.required],
     appointmentTime: [null, Validators.required],
-    reason: ['', [Validators.required, Validators.maxLength(500)]],
+    reason: ['', [Validators.maxLength(500)]],
   });
 
   patientSearch = new FormControl('');
@@ -65,35 +71,30 @@ export class AddAppointment implements OnInit {
   doctorPlaceholder = 'Doctor';
 
   appointmentDateTime$ = new Observable<Date | null>();
+
+  patientQueryParameters: UserQueryParametersDTO = {
+    page: 1,
+    pageSize: 4,
+  };
+  userQueryParameters: UserQueryParametersDTO = {
+    page: 1,
+    pageSize: 4,
+    userRole: UserRoleEnum.doctor,
+  };
   patientsResult$!: Observable<PagedResultDTO<Patient> | null>;
   doctorsResult$!: Observable<PagedResultDTO<User> | null>;
 
   ngOnInit() {
-    this.appointmentDateTime$ = this.form.valueChanges.pipe(
-      map(({ appointmentDate, appointmentTime }) => {
-        if (!appointmentDate || !appointmentTime) return null;
-
-        const date = new Date(appointmentDate);
-        const time = new Date(appointmentTime);
-
-        date.setHours(time.getHours(), time.getMinutes(), 0, 0);
-        return date;
-      }),
-    );
-
     this.patientsResult$ = this.patientSearch.valueChanges.pipe(
       startWith(''),
       debounceTime(300),
       distinctUntilChanged(),
       tap(() => {
         this.activeSearch = 'patient';
+        this.patientQueryParameters.searchTerm = this.patientSearch.value ?? '';
       }),
       switchMap((searchTerm) => {
-        return this.patientService.getPatients({
-          page: 1,
-          pageSize: 4,
-          searchTerm: searchTerm ?? '',
-        });
+        return this.patientService.getPatients(this.patientQueryParameters);
       }),
       map((result) => result.body),
     );
@@ -104,14 +105,10 @@ export class AddAppointment implements OnInit {
       distinctUntilChanged(),
       tap(() => {
         this.activeSearch = 'doctor';
+        this.userQueryParameters.searchTerm = this.doctorSearch.value ?? '';
       }),
       switchMap((searchTerm) => {
-        return this.userService.getUsers({
-          page: 1,
-          pageSize: 4,
-          searchTerm: searchTerm ?? '',
-          userRole: UserRoleEnum.doctor,
-        });
+        return this.userService.getUsers(this.userQueryParameters);
       }),
       map((result) => result.body),
     );
@@ -133,7 +130,11 @@ export class AddAppointment implements OnInit {
 
   submitted = false;
 
-  isInvalid(controlName: string): boolean {
+  isInvalid(controlName?: string): boolean {
+    if (!controlName) {
+      return this.form.invalid && (this.form.touched || this.submitted);
+    }
+
     const control = this.form.get(controlName);
     return !!(control && control.invalid && (control.touched || this.submitted));
   }
@@ -141,10 +142,48 @@ export class AddAppointment implements OnInit {
   submit() {
     this.submitted = true;
 
-    if (this.form.valid) {
+    if (this.form.invalid) {
       this.form.markAllAsTouched();
+      return;
     }
 
-    // logic to submit the form data to the server would go here
+    const formValue = this.form.value;
+
+    if (!formValue.appointmentDate || !formValue.appointmentTime) {
+      return;
+    }
+
+    const date = formValue.appointmentDate as Date;
+    const time = formValue.appointmentTime as Date;
+
+    const appointmentDate = new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+      time.getHours(),
+      time.getMinutes(),
+      0,
+      0,
+    );
+
+    console.log('Local:', appointmentDate);
+    console.log('ISO:', appointmentDate.toISOString());
+
+    const newAppointment: AddAppointmentDto = {
+      patientId: formValue.patientId!,
+      doctorId: formValue.doctorId!,
+      date: appointmentDate.toISOString(),
+      reason: formValue.reason!,
+    };
+
+    this.appointmentService.addAppointment(newAppointment).subscribe({
+      next: (response) => {
+        this.router.navigate(['/dashboard']);
+      },
+      error: (error) => {
+        console.error('Error adding appointment:', error);
+        this.submitted = false;
+      },
+    });
   }
 }

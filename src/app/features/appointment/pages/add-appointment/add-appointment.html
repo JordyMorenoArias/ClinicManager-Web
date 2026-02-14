@@ -45,7 +45,12 @@
         placeholder="Reason"
       />
       <button
-        class="w-full h-12 mt-4 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 transition-colors"
+        [ngClass]="
+          isInvalid()
+            ? 'bg-gray-300 cursor-not-allowed'
+            : 'bg-blue-500 hover:bg-blue-600 cursor-pointer'
+        "
+        class="w-full h-12 mt-4 bg-blue-500 text-white font-semibold rounded-md transition-colors"
         type="submit"
       >
         SUBMIT
