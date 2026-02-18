@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { Patient } from '../../../patient/models/patient.model';
 import { User } from '../../../user/models/user.model';
-import { debounceTime, distinctUntilChanged, map, Observable, startWith } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map, Observable, startWith, switchMap } from 'rxjs';
 import { PatientService } from '../../../patient/services/patient.service';
 import { UserService } from '../../../user/services/user.service';
 import { UserRoleEnum } from '../../../user/enums/user-role.enum';
@@ -33,7 +33,7 @@ export class AddAppointment {
   patientSearch = new FormControl('');
   doctorSearch = new FormControl('');
 
-  activeSearch: 'patient' | 'doctor' = 'patient';
+  searchContext: 'patient' | 'doctor' = 'patient';
 
   appointmentDateTime$ = new Observable<Date | null>();
 
@@ -45,24 +45,44 @@ export class AddAppointment {
   userQueryParameters: UserQueryParametersDTO = {
     page: 1,
     pageSize: 4,
-    userRole: UserRoleEnum.doctor,
   };
 
   patientsResult$!: Observable<PagedResultDTO<Patient> | null>;
   doctorsResult$!: Observable<PagedResultDTO<User> | null>;
 
   ngOnInit() {
-    this.patientSearch.valueChanges
-      .pipe(startWith(''), debounceTime(300), distinctUntilChanged())
-      .subscribe((value) => {
-        this.patientSearchChange(value);
-      });
+    this.patientsResult$ = this.patientSearch.valueChanges.pipe(
+      startWith(''),
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap((value) => {
+        this.patientQueryParameters = {
+          ...this.patientQueryParameters,
+          searchTerm: value ?? '',
+        };
 
-    this.doctorSearch.valueChanges
-      .pipe(startWith(''), debounceTime(300), distinctUntilChanged())
-      .subscribe((value) => {
-        this.doctorSearchChange(value);
-      });
+        return this.patientService
+          .getPatients(this.patientQueryParameters)
+          .pipe(map((result) => result.body));
+      }),
+    );
+
+    this.doctorsResult$ = this.doctorSearch.valueChanges.pipe(
+      startWith(''),
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap((value) => {
+        this.userQueryParameters = {
+          ...this.userQueryParameters,
+          searchTerm: value ?? '',
+          userRole: UserRoleEnum.doctor,
+        };
+
+        return this.userService
+          .getUsers(this.userQueryParameters)
+          .pipe(map((result) => result.body));
+      }),
+    );
   }
 
   patientSearchChange(value: string | null) {
@@ -89,8 +109,8 @@ export class AddAppointment {
       .pipe(map((result) => result.body));
   }
 
-  changeActiveSearch(type: 'patient' | 'doctor') {
-    this.activeSearch = type;
+  changeSearchContext(type: 'patient' | 'doctor') {
+    this.searchContext = type;
   }
 
   selectPatient(patient: Patient) {

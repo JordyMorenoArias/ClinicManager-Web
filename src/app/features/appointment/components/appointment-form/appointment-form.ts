@@ -31,12 +31,12 @@ import { User } from '../../../user/models/user.model';
 export class AppointmentForm implements OnChanges {
   private fb = inject(FormBuilder);
 
-  @Input() patientSearch!: FormControl;
-  @Input() doctorSearch!: FormControl;
+  @Input({ required: true }) patientSearch!: FormControl;
+  @Input({ required: true }) doctorSearch!: FormControl;
   @Input() selectedPatient: Patient | null = null;
   @Input() selectedDoctor: User | null = null;
   @Output() formValue = new EventEmitter<any>();
-  @Output() activeSearch = new EventEmitter<'patient' | 'doctor'>();
+  @Output() searchContext = new EventEmitter<'patient' | 'doctor'>();
 
   ngOnChanges(): void {
     if (this.selectedPatient) {
@@ -57,11 +57,11 @@ export class AppointmentForm implements OnChanges {
   });
 
   onPatientFocus() {
-    this.activeSearch.emit('patient');
+    this.searchContext.emit('patient');
   }
 
   onDoctorFocus() {
-    this.activeSearch.emit('doctor');
+    this.searchContext.emit('doctor');
   }
 
   submitted = false;

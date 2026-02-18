@@ -11,11 +11,11 @@
       [selectedPatient]="selectedPatient"
       [selectedDoctor]="selectedDoctor"
       (formValue)="submit($event)"
-      (activeSearch)="changeActiveSearch($event)"
+      (searchContext)="changeSearchContext($event)"
     ></app-appointment-form>
   </div>
   <div class="flex flex-col gap-5 md:col-span-2 md:row-span-4 md:col-start-3">
-    @if (activeSearch === 'patient') {
+    @if (searchContext === 'patient') {
       @if (patientsResult$ | async; as patients) {
         @for (patient of patients?.items ?? []; track patient.id) {
           <app-patient-select-card
@@ -25,7 +25,7 @@
           ></app-patient-select-card>
         }
       }
-    } @else if (activeSearch === 'doctor') {
+    } @else if (searchContext === 'doctor') {
       @if (doctorsResult$ | async; as doctors) {
         @for (doctor of doctors?.items ?? []; track doctor.id) {
           <app-doctor-select-card
