@@ -1,0 +1,54 @@
+<form class="flex flex-col gap-13" [formGroup]="form" (ngSubmit)="submit()">
+  <input
+    class="w-full h-12 p-3 text-base border-b-2 rounded-md outline-none"
+    [ngClass]="isInvalid('patientId') ? 'border-red-300' : 'border-gray-200'"
+    type="text"
+    [placeholder]="selectedPatient?.fullName || 'Patient'"
+    (focus)="onPatientFocus()"
+    [formControl]="patientSearch"
+  />
+
+  <input
+    class="w-full h-12 p-3 text-base border-b-2 rounded-md outline-none"
+    [ngClass]="isInvalid('doctorId') ? 'border-red-300' : 'border-gray-200'"
+    type="text"
+    [placeholder]="selectedDoctor?.fullName || 'Doctor'"
+    (focus)="onDoctorFocus()"
+    [formControl]="doctorSearch"
+  />
+
+  <div class="w-full flex justify-between pt-3">
+    <mat-form-field>
+      <mat-label>Date</mat-label>
+      <input matInput [matDatepicker]="datepicker" formControlName="appointmentDate" />
+      <mat-datepicker #datepicker />
+      <mat-datepicker-toggle matSuffix [for]="datepicker" />
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Time</mat-label>
+      <input matInput [matTimepicker]="timepicker" formControlName="appointmentTime" />
+      <mat-timepicker #timepicker />
+      <mat-timepicker-toggle matSuffix [for]="timepicker" />
+    </mat-form-field>
+  </div>
+  <input
+    class="w-full h-12 p-3 text-base border-b-2 rounded-md outline-none"
+    [ngClass]="isInvalid('reason') ? 'border-red-300' : 'border-gray-200'"
+    type="text"
+    formControlName="reason"
+    placeholder="Reason"
+  />
+  <button
+    [disabled]="form.invalid"
+    class="w-full h-12 mt-4 text-white font-semibold rounded-md transition-colors"
+    [ngClass]="
+      form.invalid
+        ? 'bg-gray-300 cursor-not-allowed'
+        : 'bg-blue-500 hover:bg-blue-600 cursor-pointer'
+    "
+    type="submit"
+  >
+    SUBMIT
+  </button>
+</form>

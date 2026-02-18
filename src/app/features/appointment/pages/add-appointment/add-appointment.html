@@ -1,69 +1,26 @@
-<main class="grid grid-cols-4 grid-rows-5 gap-9 h-full w-full pt-20 pb-4 md:max-w-6xl mx-auto px-6">
-  <div class="col-span-4 pt-12">
+<main
+  class="flex flex-col md:grid md:grid-cols-4 md:grid-rows-5 gap-9 h-full w-full pt-20 pb-4 md:max-w-6xl mx-auto px-6"
+>
+  <div class="md:col-span-4 pt-12">
     <h1 class="text-3xl font-bold">Add appointment</h1>
   </div>
-  <div class="col-span-2 row-span-4 row-start-2">
-    <form class="flex flex-col gap-13" [formGroup]="form" (ngSubmit)="submit()">
-      <input
-        class="w-full h-12 p-3 text-base border-b-2 rounded-md outline-none"
-        [ngClass]="isInvalid('patientId') ? 'border-red-300' : 'border-gray-200'"
-        type="text"
-        [placeholder]="patientPlaceholder"
-        (click)="activeSearch = 'patient'"
-        [formControl]="patientSearch"
-      />
-
-      <input
-        class="w-full h-12 p-3 text-base border-b-2 rounded-md outline-none"
-        [ngClass]="isInvalid('doctorId') ? 'border-red-300' : 'border-gray-200'"
-        type="text"
-        [placeholder]="doctorPlaceholder"
-        (click)="activeSearch = 'doctor'"
-        [formControl]="doctorSearch"
-      />
-
-      <div class="w-full flex justify-between pt-3">
-        <mat-form-field>
-          <mat-label>Appointment date</mat-label>
-          <input matInput [matDatepicker]="datepicker" formControlName="appointmentDate" />
-          <mat-datepicker #datepicker />
-          <mat-datepicker-toggle matSuffix [for]="datepicker" />
-        </mat-form-field>
-
-        <mat-form-field>
-          <mat-label>Appointment time</mat-label>
-          <input matInput [matTimepicker]="timepicker" formControlName="appointmentTime" />
-          <mat-timepicker #timepicker />
-          <mat-timepicker-toggle matSuffix [for]="timepicker" />
-        </mat-form-field>
-      </div>
-      <input
-        class="w-full h-12 p-3 text-base border-b-2 rounded-md outline-none"
-        [ngClass]="isInvalid('reason') ? 'border-red-300' : 'border-gray-200'"
-        type="text"
-        formControlName="reason"
-        placeholder="Reason"
-      />
-      <button
-        [ngClass]="
-          isInvalid()
-            ? 'bg-gray-300 cursor-not-allowed'
-            : 'bg-blue-500 hover:bg-blue-600 cursor-pointer'
-        "
-        class="w-full h-12 mt-4 bg-blue-500 text-white font-semibold rounded-md transition-colors"
-        type="submit"
-      >
-        SUBMIT
-      </button>
-    </form>
+  <div class="md:col-span-2 md:row-span-4 md:row-start-2">
+    <app-appointment-form
+      [patientSearch]="patientSearch"
+      [doctorSearch]="doctorSearch"
+      [selectedPatient]="selectedPatient"
+      [selectedDoctor]="selectedDoctor"
+      (formValue)="submit($event)"
+      (activeSearch)="changeActiveSearch($event)"
+    ></app-appointment-form>
   </div>
-  <div class="flex flex-col gap-5 col-span-2 row-span-4 col-start-3">
+  <div class="flex flex-col gap-5 md:col-span-2 md:row-span-4 md:col-start-3">
     @if (activeSearch === 'patient') {
       @if (patientsResult$ | async; as patients) {
         @for (patient of patients?.items ?? []; track patient.id) {
           <app-patient-select-card
             [patient]="patient"
-            [selectedPatientId]="selectedPatientId"
+            [selectedPatientId]="selectedPatient?.id"
             (click)="selectPatient(patient)"
           ></app-patient-select-card>
         }
@@ -73,7 +30,7 @@
         @for (doctor of doctors?.items ?? []; track doctor.id) {
           <app-doctor-select-card
             [doctor]="doctor"
-            [selectedDoctorId]="selectedDoctorId"
+            [selectedDoctorId]="selectedDoctor?.id"
             (click)="selectDoctor(doctor)"
           >
           </app-doctor-select-card>

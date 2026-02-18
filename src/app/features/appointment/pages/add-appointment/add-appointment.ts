@@ -1,30 +1,11 @@
-import { Component, inject, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { Component, inject } from '@angular/core';
 import { Patient } from '../../../patient/models/patient.model';
 import { User } from '../../../user/models/user.model';
-import {
-  debounceTime,
-  distinctUntilChanged,
-  map,
-  switchMap,
-  tap,
-  Observable,
-  startWith,
-} from 'rxjs';
+import { debounceTime, distinctUntilChanged, map, Observable, startWith } from 'rxjs';
 import { PatientService } from '../../../patient/services/patient.service';
 import { UserService } from '../../../user/services/user.service';
 import { UserRoleEnum } from '../../../user/enums/user-role.enum';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatTimepickerModule } from '@angular/material/timepicker';
-import { AsyncPipe, CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { PagedResultDTO } from '../../../../shared/dtos/paged-result.dto';
 import { AddAppointmentDto } from '../../dtos/add-appointment.dto';
 import { AppointmentService } from '../../services/appointment.service';
@@ -32,47 +13,27 @@ import { Router } from '@angular/router';
 import { UserQueryParametersDTO } from '../../../user/dtos/user-query-parameters.dto';
 import { PatientSelectCard } from '../../../patient/components/patient-select-card/patient-select-card';
 import { DoctorSelectCard } from '../../../user/components/doctor-select-card/doctor-select-card';
+import { AppointmentForm } from '../../components/appointment-form/appointment-form';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-add-appointment',
-  imports: [
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatTimepickerModule,
-    MatDatepickerModule,
-    FormsModule,
-    AsyncPipe,
-    CommonModule,
-    PatientSelectCard,
-    DoctorSelectCard,
-  ],
+  imports: [CommonModule, AppointmentForm, PatientSelectCard, DoctorSelectCard],
   templateUrl: './add-appointment.html',
   styleUrl: './add-appointment.css',
 })
-export class AddAppointment implements OnInit {
+export class AddAppointment {
   private patientService = inject(PatientService);
   private userService = inject(UserService);
   private appointmentService = inject(AppointmentService);
   private router = inject(Router);
-  private fb = inject(FormBuilder);
 
-  readonly form = this.fb.group({
-    patientId: ['', Validators.required],
-    doctorId: ['', Validators.required],
-    appointmentDate: [null, Validators.required],
-    appointmentTime: [null, Validators.required],
-    reason: ['', [Validators.maxLength(500)]],
-  });
-
+  selectedPatient: Patient | null = null;
+  selectedDoctor: User | null = null;
   patientSearch = new FormControl('');
   doctorSearch = new FormControl('');
-  selectedPatientId: string | null = null;
-  selectedDoctorId: string | null = null;
 
   activeSearch: 'patient' | 'doctor' = 'patient';
-  patientPlaceholder = 'Patient';
-  doctorPlaceholder = 'Doctor';
 
   appointmentDateTime$ = new Observable<Date | null>();
 
@@ -80,79 +41,69 @@ export class AddAppointment implements OnInit {
     page: 1,
     pageSize: 4,
   };
+
   userQueryParameters: UserQueryParametersDTO = {
     page: 1,
     pageSize: 4,
     userRole: UserRoleEnum.doctor,
   };
+
   patientsResult$!: Observable<PagedResultDTO<Patient> | null>;
   doctorsResult$!: Observable<PagedResultDTO<User> | null>;
 
   ngOnInit() {
-    this.patientsResult$ = this.patientSearch.valueChanges.pipe(
-      startWith(''),
-      debounceTime(300),
-      distinctUntilChanged(),
-      tap(() => {
-        this.activeSearch = 'patient';
-        this.patientQueryParameters.searchTerm = this.patientSearch.value ?? '';
-      }),
-      switchMap(() => {
-        return this.patientService.getPatients(this.patientQueryParameters);
-      }),
-      map((result) => result.body),
-    );
+    this.patientSearch.valueChanges
+      .pipe(startWith(''), debounceTime(300), distinctUntilChanged())
+      .subscribe((value) => {
+        this.patientSearchChange(value);
+      });
 
-    this.doctorsResult$ = this.doctorSearch.valueChanges.pipe(
-      startWith(''),
-      debounceTime(300),
-      distinctUntilChanged(),
-      tap(() => {
-        this.activeSearch = 'doctor';
-        this.userQueryParameters.searchTerm = this.doctorSearch.value ?? '';
-      }),
-      switchMap(() => {
-        return this.userService.getUsers(this.userQueryParameters);
-      }),
-      map((result) => result.body),
-    );
+    this.doctorSearch.valueChanges
+      .pipe(startWith(''), debounceTime(300), distinctUntilChanged())
+      .subscribe((value) => {
+        this.doctorSearchChange(value);
+      });
+  }
+
+  patientSearchChange(value: string | null) {
+    this.patientQueryParameters = {
+      ...this.patientQueryParameters,
+      searchTerm: value ?? '',
+      page: 1,
+    };
+
+    this.patientsResult$ = this.patientService
+      .getPatients(this.patientQueryParameters)
+      .pipe(map((result) => result.body));
+  }
+
+  doctorSearchChange(value: string | null) {
+    this.userQueryParameters = {
+      ...this.userQueryParameters,
+      searchTerm: value ?? '',
+      page: 1,
+    };
+
+    this.doctorsResult$ = this.userService
+      .getUsers(this.userQueryParameters)
+      .pipe(map((result) => result.body));
+  }
+
+  changeActiveSearch(type: 'patient' | 'doctor') {
+    this.activeSearch = type;
   }
 
   selectPatient(patient: Patient) {
-    this.patientSearch.setValue(patient.fullName, { emitEvent: false });
-    this.form.get('patientId')?.setValue(patient.id.toString());
-    this.selectedPatientId = patient.id.toString();
-    this.patientPlaceholder = patient.fullName;
+    this.patientSearch.setValue(patient.fullName);
+    this.selectedPatient = patient;
   }
 
   selectDoctor(doctor: User) {
-    this.doctorSearch.setValue(doctor.fullName, { emitEvent: false });
-    this.form.get('doctorId')?.setValue(doctor.id.toString());
-    this.selectedDoctorId = doctor.id.toString();
-    this.doctorPlaceholder = doctor.fullName;
+    this.doctorSearch.setValue(doctor.fullName);
+    this.selectedDoctor = doctor;
   }
 
-  submitted = false;
-
-  isInvalid(controlName?: string): boolean {
-    if (!controlName) {
-      return this.form.invalid && (this.form.touched || this.submitted);
-    }
-
-    const control = this.form.get(controlName);
-    return !!(control && control.invalid && (control.touched || this.submitted));
-  }
-
-  submit() {
-    this.submitted = true;
-
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      return;
-    }
-
-    const formValue = this.form.value;
-
+  submit(formValue: any) {
     if (!formValue.appointmentDate || !formValue.appointmentTime) {
       return;
     }
@@ -183,7 +134,6 @@ export class AddAppointment implements OnInit {
       },
       error: (error) => {
         console.error('Error adding appointment:', error);
-        this.submitted = false;
       },
     });
   }
