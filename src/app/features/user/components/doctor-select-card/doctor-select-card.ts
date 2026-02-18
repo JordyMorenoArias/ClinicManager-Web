@@ -13,5 +13,5 @@ export class DoctorSelectCard {
   doctor!: User;
 
   @Input()
-  selectedDoctorId?: string | null = null;
+  selectedDoctorId?: number | null = null;
 }

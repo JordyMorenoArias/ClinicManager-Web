@@ -13,5 +13,5 @@ export class PatientSelectCard {
   patient!: Patient;
 
   @Input()
-  selectedPatientId?: string | null = null;
+  selectedPatientId?: number | null = null;
 }
