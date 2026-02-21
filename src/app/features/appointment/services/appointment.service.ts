@@ -8,6 +8,7 @@ import { Appointment } from '../models/appointment.model';
 import { AppointmentDto } from '../dtos/appointment.dto';
 import { AppointmentMapper } from '../mappers/appointment.mapper';
 import { AddAppointmentDto } from '../dtos/add-appointment.dto';
+import { UpdateAppointmentDto } from '../dtos/update-appointment.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -15,6 +16,24 @@ import { AddAppointmentDto } from '../dtos/add-appointment.dto';
 export class AppointmentService {
   private http = inject(HttpClient);
   private apiUrl = environment.apiUrl;
+
+  getAppointmentById(id: string): Observable<HttpResponse<Appointment>> {
+    return this.http
+      .get<AppointmentDto>(`${this.apiUrl}/appointment/${id}`, {
+        observe: 'response',
+        withCredentials: true,
+      })
+      .pipe(
+        map((response: HttpResponse<AppointmentDto>) => {
+          if (!response.body) {
+            throw new Error('Get appointment by id response body is null');
+          }
+
+          const mappedBody: Appointment = AppointmentMapper.fromDTO(response.body);
+          return response.clone({ body: mappedBody });
+        }),
+      );
+  }
 
   getAppointments(
     queryParams: AppointmentQueryParametersDTO,
@@ -28,7 +47,7 @@ export class AppointmentService {
       .pipe(
         map((response: HttpResponse<PagedResultDTO<AppointmentDto>>) => {
           if (!response.body) {
-            throw new Error('Login response body is null');
+            throw new Error('Get appointments response body is null');
           }
 
           // Map each AppointmentDto to Appointment
@@ -52,6 +71,30 @@ export class AppointmentService {
         map((response: HttpResponse<AppointmentDto>) => {
           if (!response.body) {
             throw new Error('Add appointment response body is null');
+          }
+
+          const mappedBody: Appointment = AppointmentMapper.fromDTO(response.body);
+          return response.clone({ body: mappedBody });
+        }),
+      );
+  }
+
+  updateAppointment(
+    updatedappointment: UpdateAppointmentDto,
+  ): Observable<HttpResponse<Appointment>> {
+    return this.http
+      .put<AppointmentDto>(
+        this.apiUrl + `/appointment/${updatedappointment.id}`,
+        updatedappointment,
+        {
+          observe: 'response',
+          withCredentials: true,
+        },
+      )
+      .pipe(
+        map((response: HttpResponse<AppointmentDto>) => {
+          if (!response.body) {
+            throw new Error('Update appointment response body is null');
           }
 
           const mappedBody: Appointment = AppointmentMapper.fromDTO(response.body);

@@ -35,6 +35,9 @@ export class AppointmentForm implements OnChanges {
   @Input({ required: true }) doctorSearch!: FormControl;
   @Input() selectedPatient: Patient | null = null;
   @Input() selectedDoctor: User | null = null;
+  @Input() appointmentDate: Date | null = null;
+  @Input() appointmentTime: Date | null = null;
+  @Input() reason: string = '';
   @Output() formValue = new EventEmitter<any>();
   @Output() searchContext = new EventEmitter<'patient' | 'doctor'>();
 
@@ -46,14 +49,26 @@ export class AppointmentForm implements OnChanges {
     if (this.selectedDoctor) {
       this.form.get('doctorId')?.setValue(this.selectedDoctor.id);
     }
+
+    if (this.appointmentDate) {
+      this.form.get('appointmentDate')?.setValue(this.appointmentDate);
+    }
+
+    if (this.appointmentTime) {
+      this.form.get('appointmentTime')?.setValue(this.appointmentTime);
+    }
+
+    if (this.reason) {
+      this.form.get('reason')?.setValue(this.reason);
+    }
   }
 
   readonly form = this.fb.group({
     patientId: [this.selectedPatient?.id, Validators.required],
     doctorId: [this.selectedDoctor?.id, Validators.required],
-    appointmentDate: [null, Validators.required],
-    appointmentTime: [null, Validators.required],
-    reason: ['', [Validators.maxLength(500)]],
+    appointmentDate: [this.appointmentDate, Validators.required],
+    appointmentTime: [this.appointmentTime, Validators.required],
+    reason: [this.reason, [Validators.maxLength(500)]],
   });
 
   onPatientFocus() {
