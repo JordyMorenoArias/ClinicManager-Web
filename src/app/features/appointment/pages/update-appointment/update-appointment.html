@@ -1,0 +1,44 @@
+<main
+  class="flex flex-col md:grid md:grid-cols-4 md:grid-rows-5 gap-9 h-full w-full pt-20 pb-4 md:max-w-6xl mx-auto px-6"
+>
+  <div class="md:col-span-4 pt-12">
+    <h1 class="text-3xl font-bold">Update appointment</h1>
+  </div>
+  <div class="md:col-span-2 md:row-span-4 md:row-start-2">
+    <app-appointment-form
+      [patientSearch]="patientSearch"
+      [doctorSearch]="doctorSearch"
+      [selectedPatient]="selectedPatient"
+      [selectedDoctor]="selectedDoctor"
+      [appointmentDate]="appointmentDate"
+      [appointmentTime]="appointmentTime"
+      [reason]="reason"
+      (formValue)="submit($event)"
+      (searchContext)="changeSearchContext($event)"
+    ></app-appointment-form>
+  </div>
+  <div class="flex flex-col gap-5 md:col-span-2 md:row-span-4 md:col-start-3">
+    @if (searchContext === 'patient') {
+      @if (patientsResult$ | async; as patients) {
+        @for (patient of patients?.items ?? []; track patient.id) {
+          <app-patient-select-card
+            [patient]="patient"
+            [selectedPatientId]="selectedPatient?.id"
+            (click)="selectPatient(patient)"
+          ></app-patient-select-card>
+        }
+      }
+    } @else if (searchContext === 'doctor') {
+      @if (doctorsResult$ | async; as doctors) {
+        @for (doctor of doctors?.items ?? []; track doctor.id) {
+          <app-doctor-select-card
+            [doctor]="doctor"
+            [selectedDoctorId]="selectedDoctor?.id"
+            (click)="selectDoctor(doctor)"
+          >
+          </app-doctor-select-card>
+        }
+      }
+    }
+  </div>
+</main>
