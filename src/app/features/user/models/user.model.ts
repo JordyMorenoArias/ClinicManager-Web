@@ -1,3 +1,5 @@
+import { DoctorProfile } from '../../doctor-profile/models/doctor-profile.model';
+
 export class User {
   constructor(
     public id: number,
@@ -6,5 +8,6 @@ export class User {
     public email: string,
     public phoneNumber: string,
     public isActive: boolean,
+    public doctorProfiles: DoctorProfile[],
   ) {}
 }

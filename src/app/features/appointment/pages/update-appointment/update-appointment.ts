@@ -60,7 +60,6 @@ export class UpdateAppointment {
     this.appointmentService.getAppointmentById(this.id).subscribe({
       next: (response) => {
         if (response.body) {
-          console.log('Appointment details:', response.body);
           this.selectPatient(response.body.patient);
           this.selectDoctor(response.body.doctor);
           this.appointmentDate = response.body.date;
@@ -130,6 +129,8 @@ export class UpdateAppointment {
     this.doctorsResult$ = this.userService
       .getUsers(this.userQueryParameters)
       .pipe(map((result) => result.body));
+
+    console.log(this.doctorsResult$);
   }
 
   changeSearchContext(type: 'patient' | 'doctor') {

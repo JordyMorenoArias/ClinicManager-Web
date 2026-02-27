@@ -1,3 +1,5 @@
+import { DoctorProfileDTO } from '../../doctor-profile/dtos/doctor-profile.dto';
+
 export interface UserDTO {
   id: number;
   fullName: string;
@@ -5,4 +7,5 @@ export interface UserDTO {
   email: string;
   phoneNumber: string;
   isActive: boolean;
+  doctorProfiles: DoctorProfileDTO[];
 }
