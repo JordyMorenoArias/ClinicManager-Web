@@ -6,6 +6,7 @@ import { AppointmentList } from './features/appointment/pages/appointment-list/a
 import { authGuard } from './core/guards/auth-guard';
 import { AddAppointment } from './features/appointment/pages/add-appointment/add-appointment';
 import { UpdateAppointment } from './features/appointment/pages/update-appointment/update-appointment';
+import { PatientList } from './features/patient/pages/patient-list/patient-list';
 
 export const routes: Routes = [
   {
@@ -29,6 +30,10 @@ export const routes: Routes = [
       {
         path: 'appointments/:id',
         component: UpdateAppointment,
+      },
+      {
+        path: 'patients',
+        component: PatientList,
       },
     ],
   },

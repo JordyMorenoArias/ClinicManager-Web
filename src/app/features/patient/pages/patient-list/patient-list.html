@@ -1,0 +1,52 @@
+<main class="w-full pt-20 pb-6 md:max-w-6xl mx-auto px-6">
+  <!-- Header -->
+  <div class="flex justify-between items-center my-6">
+    <h1 class="text-2xl font-semibold">Manage, edit or add new patients</h1>
+
+    <button
+      class="bg-blue-600 text-white px-6 py-3 gap-1 rounded-4xl self-end hover:bg-blue-800 transition-colors cursor-pointer"
+      routerLink="/patients/create"
+    >
+      Add Patient
+    </button>
+  </div>
+
+  <div class="relative w-full md:w-100 ml-auto">
+    <input
+      type="text"
+      placeholder="Search patients"
+      [formControl]="patientSearch"
+      class="w-full bg-transparent border-b border-gray-300 py-3 pr-10 text-lg text-gray-700 placeholder-gray-400 focus:outline-none focus:border-blue-500 transition-colors"
+    />
+
+    <!-- Search Icon -->
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="absolute right-0 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      stroke-width="2"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M21 21l-4.35-4.35m2.85-5.15a7 7 0 11-14 0 7 7 0 0114 0z"
+      />
+    </svg>
+  </div>
+
+  <!-- Patients Grid -->
+  <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+    @if (pagedResult$ | async; as patients) {
+      @for (patient of patients.items; track patient.id) {
+        <app-patient-card [patient]="patient"></app-patient-card>
+      } @empty {
+        <p class="text-center text-gray-500 col-span-full mt-10">No patients found.</p>
+      }
+    }
+  </section>
+  @if (pagedResult$ | async; as paged) {
+    <app-pagination [paged]="paged" (pageChange)="onPageChange($event)"></app-pagination>
+  }
+</main>

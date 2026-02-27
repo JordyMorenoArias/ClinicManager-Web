@@ -14,6 +14,7 @@ import { Appointment } from '../../models/appointment.model';
 import { AppointmentCard } from '../../components/appointment-card/appointment-card';
 import { map, Observable } from 'rxjs';
 import { AsyncPipe, CommonModule } from '@angular/common';
+import { Pagination } from '../../../../shared/components/pagination/pagination';
 
 @Component({
   selector: 'app-appointment-list',
@@ -28,6 +29,7 @@ import { AsyncPipe, CommonModule } from '@angular/common';
     MatSelectModule,
     AppointmentCard,
     AsyncPipe,
+    Pagination,
   ],
   templateUrl: './appointment-list.html',
   styleUrl: './appointment-list.css',
@@ -87,25 +89,9 @@ export class AppointmentList implements OnInit {
     this.loadAppointments();
   }
 
-  changePage(page: number): void {
-    if (page < 1) return;
-
+  onPageChange(page: number) {
     this.queryParams.page = page;
     this.loadAppointments();
-  }
-
-  getPages(paged: PagedResultDTO<any>): number[] {
-    const range = 5;
-
-    const start = Math.max(paged.page - range, 1);
-    const end = Math.min(paged.page + range, paged.totalPages);
-
-    const pages: number[] = Array.from({ length: end - start + 1 }, (_, i) => start + i);
-
-    pages[0] = 1;
-    pages[pages.length - 1] = paged.totalPages;
-
-    return pages;
   }
 
   private loadAppointments(): void {

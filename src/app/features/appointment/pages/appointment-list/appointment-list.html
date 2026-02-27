@@ -2,7 +2,7 @@
   <div class="flex justify-between items-center my-6">
     <h1 class="text-2xl font-semibold">Manage, edit or add new appointments</h1>
     <button
-      class="w-[70px] bg-blue-600 text-white py-3 gap-1 rounded-4xl self-end hover:bg-blue-800 transition-colors cursor-pointer"
+      class="bg-blue-600 text-white px-6 py-3 gap-1 rounded-4xl self-end hover:bg-blue-800 transition-colors cursor-pointer"
       routerLink="/appointments"
     >
       Add
@@ -60,39 +60,6 @@
   </section>
 
   @if (pagedResult$ | async; as paged) {
-    <nav
-      class="w-full flex justify-center gap-2 mt-8 py-3 bg-gray-50 border-t border-gray-200 rounded-lg"
-    >
-      <!-- Prev -->
-      <button
-        (click)="changePage(paged.page - 1)"
-        [disabled]="paged.page === 1"
-        class="w-9 h-9 rounded-full border text-gray-400 border-gray-200 hover:bg-gray-100 disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed"
-      >
-        ‹
-      </button>
-
-      <!-- Pages -->
-      <button
-        *ngFor="let page of getPages(paged)"
-        (click)="changePage(page)"
-        class="w-9 h-9 rounded-full text-sm font-medium border transition-colors cursor-pointer"
-        [ngClass]="{
-          'bg-blue-600 text-white border-blue-600': page === paged.page,
-          'bg-white text-gray-500 border-gray-200 hover:bg-gray-100': page !== paged.page,
-        }"
-      >
-        {{ page }}
-      </button>
-
-      <!-- Next -->
-      <button
-        (click)="changePage(paged.page + 1)"
-        [disabled]="paged.page === paged.totalPages"
-        class="w-9 h-9 rounded-full border text-gray-400 border-gray-200 hover:bg-gray-100 disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed"
-      >
-        ›
-      </button>
-    </nav>
+    <app-pagination [paged]="paged" (pageChange)="onPageChange($event)"></app-pagination>
   }
 </main>
