@@ -15,6 +15,7 @@ import { PatientSelectCard } from '../../../patient/components/patient-select-ca
 import { DoctorSelectCard } from '../../../user/components/doctor-select-card/doctor-select-card';
 import { AppointmentForm } from '../../components/appointment-form/appointment-form';
 import { FormControl } from '@angular/forms';
+import { AppointmentFormData } from '../../models/appointment-form-data.model';
 
 @Component({
   selector: 'app-add-appointment',
@@ -28,8 +29,10 @@ export class AddAppointment {
   private appointmentService = inject(AppointmentService);
   private router = inject(Router);
 
-  selectedPatient: Patient | null = null;
-  selectedDoctor: User | null = null;
+  initialAppointmentData: AppointmentFormData = {
+    patient: null,
+    doctor: null as any,
+  };
   patientSearch = new FormControl('');
   doctorSearch = new FormControl('');
 
@@ -115,12 +118,18 @@ export class AddAppointment {
 
   selectPatient(patient: Patient) {
     this.patientSearch.setValue(patient.fullName);
-    this.selectedPatient = patient;
+    this.initialAppointmentData = {
+      ...this.initialAppointmentData,
+      patient: patient,
+    };
   }
 
   selectDoctor(doctor: User) {
     this.doctorSearch.setValue(doctor.fullName);
-    this.selectedDoctor = doctor;
+    this.initialAppointmentData = {
+      ...this.initialAppointmentData,
+      doctor: doctor,
+    };
   }
 
   submit(formValue: any) {
@@ -145,7 +154,7 @@ export class AddAppointment {
       patientId: formValue.patientId!,
       doctorId: formValue.doctorId!,
       date: appointmentDate.toISOString(),
-      reason: formValue.reason!,
+      reason: formValue.reason ?? '',
     };
 
     this.appointmentService.addAppointment(newAppointment).subscribe({

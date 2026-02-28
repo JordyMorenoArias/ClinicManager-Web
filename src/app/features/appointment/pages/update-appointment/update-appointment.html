@@ -8,11 +8,7 @@
     <app-appointment-form
       [patientSearch]="patientSearch"
       [doctorSearch]="doctorSearch"
-      [selectedPatient]="selectedPatient"
-      [selectedDoctor]="selectedDoctor"
-      [appointmentDate]="appointmentDate"
-      [appointmentTime]="appointmentTime"
-      [reason]="reason"
+      [initialData]="initialAppointmentData"
       (formValue)="submit($event)"
       (searchContext)="changeSearchContext($event)"
     ></app-appointment-form>
@@ -23,7 +19,7 @@
         @for (patient of patients?.items ?? []; track patient.id) {
           <app-patient-select-card
             [patient]="patient"
-            [selectedPatientId]="selectedPatient?.id"
+            [selectedPatientId]="initialAppointmentData.patient?.id"
             (click)="selectPatient(patient)"
           ></app-patient-select-card>
         }
@@ -33,7 +29,7 @@
         @for (doctor of doctors?.items ?? []; track doctor.id) {
           <app-doctor-select-card
             [doctor]="doctor"
-            [selectedDoctorId]="selectedDoctor?.id"
+            [selectedDoctorId]="initialAppointmentData.doctor?.id"
             (click)="selectDoctor(doctor)"
           >
           </app-doctor-select-card>

@@ -1,6 +1,6 @@
 export interface AddAppointmentDto {
-  patientId: string;
-  doctorId: string;
+  patientId: number;
+  doctorId: number;
   date: string;
   reason: string;
 }

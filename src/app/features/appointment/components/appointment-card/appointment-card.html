@@ -9,18 +9,15 @@
         <div class="flex items-center">
           <span
             [ngClass]="{
-              'bg-amber-100 text-amber-600':
-                appointment.appointmentStatus === appointmentStatusEnum.Pending,
+              'bg-amber-100 text-amber-600': appointment.status === appointmentStatusEnum.Pending,
               'bg-emerald-100 text-emerald-600':
-                appointment.appointmentStatus === appointmentStatusEnum.Confirmed,
-              'bg-blue-100 text-blue-600':
-                appointment.appointmentStatus === appointmentStatusEnum.Completed,
-              'bg-rose-100 text-rose-600':
-                appointment.appointmentStatus === appointmentStatusEnum.Cancelled,
+                appointment.status === appointmentStatusEnum.Confirmed,
+              'bg-blue-100 text-blue-600': appointment.status === appointmentStatusEnum.Completed,
+              'bg-rose-100 text-rose-600': appointment.status === appointmentStatusEnum.Cancelled,
             }"
             class="px-3 py-1 text-sm font-medium rounded-full mr-4 inline-flex items-center"
           >
-            {{ appointment.appointmentStatus | appointmentStatus }}
+            {{ appointment.status | appointmentStatus }}
           </span>
 
           <span class="text-base text-sm text-gray-500">

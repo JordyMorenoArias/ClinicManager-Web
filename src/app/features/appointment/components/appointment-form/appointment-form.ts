@@ -11,8 +11,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatTimepickerModule } from '@angular/material/timepicker';
-import { Patient } from '../../../patient/models/patient.model';
-import { User } from '../../../user/models/user.model';
+import { AppointmentFormData } from '../../models/appointment-form-data.model';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-appointment-form',
@@ -24,6 +24,7 @@ import { User } from '../../../user/models/user.model';
     MatDatepickerModule,
     FormsModule,
     CommonModule,
+    MatSelectModule,
   ],
   templateUrl: './appointment-form.html',
   styleUrl: './appointment-form.css',
@@ -33,42 +34,30 @@ export class AppointmentForm implements OnChanges {
 
   @Input({ required: true }) patientSearch!: FormControl;
   @Input({ required: true }) doctorSearch!: FormControl;
-  @Input() selectedPatient: Patient | null = null;
-  @Input() selectedDoctor: User | null = null;
-  @Input() appointmentDate: Date | null = null;
-  @Input() appointmentTime: Date | null = null;
-  @Input() reason: string = '';
+  @Input() initialData?: AppointmentFormData;
   @Output() formValue = new EventEmitter<any>();
   @Output() searchContext = new EventEmitter<'patient' | 'doctor'>();
 
   ngOnChanges(): void {
-    if (this.selectedPatient) {
-      this.form.get('patientId')?.setValue(this.selectedPatient.id);
-    }
+    if (!this.initialData) return;
 
-    if (this.selectedDoctor) {
-      this.form.get('doctorId')?.setValue(this.selectedDoctor.id);
-    }
-
-    if (this.appointmentDate) {
-      this.form.get('appointmentDate')?.setValue(this.appointmentDate);
-    }
-
-    if (this.appointmentTime) {
-      this.form.get('appointmentTime')?.setValue(this.appointmentTime);
-    }
-
-    if (this.reason) {
-      this.form.get('reason')?.setValue(this.reason);
-    }
+    this.form.patchValue({
+      patientId: this.initialData.patient?.id,
+      doctorId: this.initialData.doctor?.id,
+      appointmentDate: this.initialData.appointmentDate,
+      appointmentTime: this.initialData.appointmentTime,
+      reason: this.initialData.reason,
+      status: this.initialData.status,
+    });
   }
 
   readonly form = this.fb.group({
-    patientId: [this.selectedPatient?.id, Validators.required],
-    doctorId: [this.selectedDoctor?.id, Validators.required],
-    appointmentDate: [this.appointmentDate, Validators.required],
-    appointmentTime: [this.appointmentTime, Validators.required],
-    reason: [this.reason, [Validators.maxLength(500)]],
+    patientId: [this.initialData?.patient?.id, Validators.required],
+    doctorId: [this.initialData?.doctor?.id, Validators.required],
+    appointmentDate: [this.initialData?.appointmentDate, Validators.required],
+    appointmentTime: [this.initialData?.appointmentTime, Validators.required],
+    reason: [this.initialData?.reason, [Validators.maxLength(500)]],
+    status: [this.initialData?.status, Validators.required],
   });
 
   onPatientFocus() {

@@ -15,6 +15,7 @@ import { DoctorSelectCard } from '../../../user/components/doctor-select-card/do
 import { PatientSelectCard } from '../../../patient/components/patient-select-card/patient-select-card';
 import { AppointmentForm } from '../../components/appointment-form/appointment-form';
 import { CommonModule } from '@angular/common';
+import { AppointmentFormData } from '../../models/appointment-form-data.model';
 
 @Component({
   selector: 'app-update-appointment',
@@ -31,13 +32,15 @@ export class UpdateAppointment {
   private appointmentService = inject(AppointmentService);
   private router = inject(Router);
 
-  selectedPatient: Patient | null = null;
-  selectedDoctor: User | null = null;
   patientSearch = new FormControl('');
   doctorSearch = new FormControl('');
-  appointmentDate: Date | null = null;
-  appointmentTime: Date | null = null;
-  reason: string = '';
+  initialAppointmentData: AppointmentFormData = {
+    patient: null,
+    doctor: null as any,
+    appointmentDate: null,
+    appointmentTime: null,
+    reason: '',
+  };
 
   searchContext: 'patient' | 'doctor' = 'patient';
 
@@ -60,11 +63,14 @@ export class UpdateAppointment {
     this.appointmentService.getAppointmentById(this.id).subscribe({
       next: (response) => {
         if (response.body) {
-          this.selectPatient(response.body.patient);
-          this.selectDoctor(response.body.doctor);
-          this.appointmentDate = response.body.date;
-          this.appointmentTime = response.body.date;
-          this.reason = response.body.reason;
+          this.initialAppointmentData = {
+            patient: response.body.patient,
+            doctor: response.body.doctor,
+            appointmentDate: new Date(response.body.date),
+            appointmentTime: new Date(response.body.date),
+            reason: response.body.reason,
+            status: response.body.status,
+          };
         }
       },
       error: (error) => {
@@ -139,12 +145,12 @@ export class UpdateAppointment {
 
   selectPatient(patient: Patient) {
     this.patientSearch.setValue(patient.fullName);
-    this.selectedPatient = patient;
+    this.initialAppointmentData.patient = patient;
   }
 
   selectDoctor(doctor: User) {
     this.doctorSearch.setValue(doctor.fullName);
-    this.selectedDoctor = doctor;
+    this.initialAppointmentData.doctor = doctor;
   }
 
   submit(formValue: any) {
@@ -171,6 +177,7 @@ export class UpdateAppointment {
       doctorId: formValue.doctorId!,
       date: appointmentDate.toISOString(),
       reason: formValue.reason!,
+      status: formValue.status,
     };
 
     this.appointmentService.updateAppointment(newAppointment).subscribe({

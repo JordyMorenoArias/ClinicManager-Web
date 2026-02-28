@@ -7,7 +7,7 @@
         : 'border-gray-200 placeholder-gray-500'
     "
     type="text"
-    [placeholder]="selectedPatient?.fullName || 'Patient'"
+    [placeholder]="initialData?.patient?.fullName || 'Patient'"
     (focus)="onPatientFocus()"
     [formControl]="patientSearch"
   />
@@ -20,7 +20,7 @@
         : 'border-gray-200 placeholder-gray-500'
     "
     type="text"
-    [placeholder]="selectedDoctor?.fullName || 'Doctor'"
+    [placeholder]="initialData?.doctor?.fullName || 'Doctor'"
     (focus)="onDoctorFocus()"
     [formControl]="doctorSearch"
   />
@@ -51,6 +51,19 @@
     formControlName="reason"
     placeholder="Reason"
   />
+
+  @if (initialData?.status != null) {
+    <mat-form-field class="w-full">
+      <mat-label>Status</mat-label>
+      <mat-select formControlName="status">
+        <mat-option [value]="1">Pending</mat-option>
+        <mat-option [value]="2">Confirmed</mat-option>
+        <mat-option [value]="3">Completed</mat-option>
+        <mat-option [value]="4">Cancelled</mat-option>
+        <mat-option [value]="5">No Show</mat-option>
+      </mat-select>
+    </mat-form-field>
+  }
   <button
     [disabled]="form.invalid"
     class="w-full h-12 mt-4 text-white font-semibold rounded-md transition-colors"

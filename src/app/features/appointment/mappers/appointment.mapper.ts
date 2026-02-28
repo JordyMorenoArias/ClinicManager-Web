@@ -1,3 +1,5 @@
+import { PatientMapper } from '../../patient/mappers/patient.mapper';
+import { UserMapper } from '../../user/mappers/user.mapper';
 import { User } from '../../user/models/user.model';
 import { AppointmentDto } from '../dtos/appointment.dto';
 import { AppointmentStatusEnum } from '../enums/appointment-status.enum';
@@ -8,22 +10,11 @@ export class AppointmentMapper {
     return new Appointment(
       dto.id,
       dto.patientId,
-      dto.patient,
+      PatientMapper.fromDTO(dto.patient),
       dto.createdById,
       dto.lastModifiedById,
       dto.doctorId,
-      new User(
-        dto.doctor.id,
-        dto.doctor.fullName,
-        dto.doctor.username,
-        dto.doctor.email,
-        dto.doctor.phoneNumber,
-        dto.doctor.isActive,
-        (dto.doctor.doctorProfiles || []).map((profile) => ({
-          ...profile,
-          createdAt: new Date(profile.createdAt),
-        })),
-      ),
+      UserMapper.fromDTO(dto.doctor),
       new Date(dto.date),
       dto.reason,
       dto.status as AppointmentStatusEnum,
@@ -35,21 +26,14 @@ export class AppointmentMapper {
     return {
       id: model.id,
       patientId: model.patientId,
-      patient: model.patient,
+      patient: PatientMapper.toDTO(model.patient),
       createdById: model.createdById,
       lastModifiedById: model.lastModifiedById,
       doctorId: model.doctorId,
-      doctor: {
-        ...model.doctor,
-        doctorProfiles: (model.doctor.doctorProfiles || []).map((profile) => ({
-          ...profile,
-          createdAt:
-            profile.createdAt instanceof Date ? profile.createdAt.toISOString() : profile.createdAt,
-        })),
-      },
+      doctor: UserMapper.toDTO(model.doctor as User),
       date: model.date.toISOString(),
       reason: model.reason,
-      status: model.appointmentStatus,
+      status: model.status,
       createdAt: model.createdAt.toISOString(),
     };
   }

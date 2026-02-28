@@ -13,7 +13,7 @@ export class Appointment {
     public doctor: User,
     public date: Date,
     public reason: string,
-    public appointmentStatus: AppointmentStatusEnum,
+    public status: AppointmentStatusEnum,
     public createdAt: Date,
   ) {}
 }
