@@ -1,7 +1,11 @@
 <form class="flex flex-col gap-13" [formGroup]="form" (ngSubmit)="submit()">
   <input
     class="w-full h-12 p-3 text-base border-b-2 rounded-md outline-none"
-    [ngClass]="isInvalid('patientId') ? 'border-red-300' : 'border-gray-200'"
+    [ngClass]="
+      isInvalid('patientId')
+        ? 'border-red-300 placeholder-red-300'
+        : 'border-gray-200 placeholder-gray-500'
+    "
     type="text"
     [placeholder]="selectedPatient?.fullName || 'Patient'"
     (focus)="onPatientFocus()"
@@ -10,7 +14,11 @@
 
   <input
     class="w-full h-12 p-3 text-base border-b-2 rounded-md outline-none"
-    [ngClass]="isInvalid('doctorId') ? 'border-red-300' : 'border-gray-200'"
+    [ngClass]="
+      isInvalid('doctorId')
+        ? 'border-red-300 placeholder-red-300'
+        : 'border-gray-200 placeholder-gray-500'
+    "
     type="text"
     [placeholder]="selectedDoctor?.fullName || 'Doctor'"
     (focus)="onDoctorFocus()"
@@ -34,7 +42,11 @@
   </div>
   <input
     class="w-full h-12 p-3 text-base border-b-2 rounded-md outline-none"
-    [ngClass]="isInvalid('reason') ? 'border-red-300' : 'border-gray-200'"
+    [ngClass]="
+      isInvalid('reason')
+        ? 'border-red-300 placeholder-red-300'
+        : 'border-gray-200 placeholder-gray-500'
+    "
     type="text"
     formControlName="reason"
     placeholder="Reason"
